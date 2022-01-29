@@ -1,1 +1,1 @@
-coxbuild==0.1.0
+coxbuild==0.1.1
