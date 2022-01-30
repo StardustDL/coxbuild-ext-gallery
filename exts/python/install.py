@@ -21,3 +21,14 @@ def install():
         run(["brew", "install", "python3"])
     elif "linux" in system:
         run(["apt-get", "install", "python3"])
+
+
+@task
+def upgrade():
+    system = platform.system().lower()
+    if "windows" in system:
+        run(["winget", "upgrade", "Python.Python.3"])
+    elif "darwin" in system:
+        run(["brew", "upgrade", "python3"])
+    elif "linux" in system:
+        run(["apt-get", "upgrade", "python3"])

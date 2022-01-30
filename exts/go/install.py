@@ -20,3 +20,14 @@ def install():
         run(["brew", "install", "go"])
     elif "linux" in system:
         run(["apt-get", "install", "go"])
+
+
+@task
+def upgrade():
+    system = platform.system().lower()
+    if "windows" in system:
+        run(["winget", "upgrade", "GoLang.Go"])
+    elif "darwin" in system:
+        run(["brew", "upgrade", "go"])
+    elif "linux" in system:
+        run(["apt-get", "upgrade", "go"])

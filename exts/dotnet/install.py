@@ -20,3 +20,14 @@ def install():
         run(["brew", "install", "dotnet"])
     elif "linux" in system:
         run(["apt-get", "install", "dotnet"])
+
+
+@task
+def upgrade():
+    system = platform.system().lower()
+    if "windows" in system:
+        run(["winget", "upgrade", "Microsoft.dotnet"])
+    elif "darwin" in system:
+        run(["brew", "upgrade", "dotnet"])
+    elif "linux" in system:
+        run(["apt-get", "upgrade", "dotnet"])
