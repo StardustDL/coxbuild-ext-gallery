@@ -1,5 +1,7 @@
 from pathlib import Path
-from coxbuild.schema import task, precond, postcond, run
+from coxbuild.schema import task, precond, postcond, run, group, depend, named
+
+grouped = group("rust")
 
 from coxbuild.extensions.shell import existCommand
 
@@ -11,6 +13,7 @@ def installed():
     return bool(run(["rustc", "--version"], fail=True, pipe=True))
 
 
+@grouped
 @precond(lambda: not installed())
 @postcond(lambda: installed())
 @task
@@ -27,6 +30,18 @@ def install():
         run(["sh", "-c", "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"])
 
 
+@grouped
 @task
 def upgrade():
     run(["rustup", "update", "stable"])
+
+@named("install")
+@depend(install)
+@task
+def defaultInstall(): pass
+
+
+@named("upgrade")
+@depend(upgrade)
+@task
+def defaultUpgrade(): pass
