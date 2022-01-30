@@ -14,14 +14,7 @@ def list():
         run(["cb", "-f", str(item), ":list"])
 
 
-@task
-def install():
-    for item in Path(os.getcwd()).glob('exts/**/install.py'):
-        print(f"Testing Install: {item}")
-        run(["cb", "-f", str(item), "install"])
-
-
-@depend(list, install)
+@depend(list)
 @task
 def default():
     pass

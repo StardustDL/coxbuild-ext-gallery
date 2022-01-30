@@ -6,7 +6,7 @@ import platform
 
 
 def installed():
-    return bool(run(["go", "version"], fail=True, pipe=True))
+    return bool(run(["dotnet", "--version"], fail=True, pipe=True))
 
 
 @precond(lambda: not installed())
@@ -15,8 +15,8 @@ def installed():
 def install():
     system = platform.system().lower()
     if "windows" in system:
-        run(["winget", "install", "GoLang.Go"])
+        run(["winget", "install", "Microsoft.dotnet"])
     elif "darwin" in system:
-        run(["brew", "install", "go"])
+        run(["brew", "install", "dotnet"])
     elif "linux" in system:
-        run(["apt-get", "install", "go"])
+        run(["apt-get", "install", "dotnet"])
