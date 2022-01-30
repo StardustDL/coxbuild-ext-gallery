@@ -35,3 +35,16 @@ jobs:
         PYTHONUTF8: 1
       run: |
         cb
+  mirror:
+    needs: test
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+    - name: mirror
+      run: |
+        git clone "https://github.com/StardustDL/coxbuild-ext-gallery.git"
+        cd "coxbuild-ext-gallery"
+        git remote add gitee "https://stardustdl:${{ secrets.GITEE_KEY }}@gitee.com/stardustdl/coxbuild-ext-gallery.git"
+        git remote set-head origin -d
+        git push gitee --prune +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
+        cd ..
