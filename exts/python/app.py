@@ -1,10 +1,9 @@
-from coxbuild.schema import task, precond, postcond, run, group, depend, named
-
-grouped = group("python")
+import platform
 
 from coxbuild.extensions.shell import existCommand
+from coxbuild.schema import depend, group, named, postcond, precond, run, task
 
-import platform
+grouped = group("python")
 
 
 def installed():
@@ -31,11 +30,12 @@ def install():
 def upgrade():
     system = platform.system().lower()
     if "windows" in system:
-        run(["winget", "upgrade", "Python.Python.3"])
+        run(["winget", "upgrade", "Python.Python.3"], fail=True)
     elif "darwin" in system:
         run(["brew", "upgrade", "python3"])
     elif "linux" in system:
         run(["apt-get", "upgrade", "python3"])
+
 
 @named("install")
 @depend(install)

@@ -1,6 +1,7 @@
 import platform
+
 from coxbuild.extensions.shell import existCommand
-from coxbuild.schema import task, precond, postcond, run, group, named, depend
+from coxbuild.schema import depend, group, named, postcond, precond, run, task
 
 grouped = group("dotnet")
 
@@ -28,7 +29,7 @@ def install():
 def upgrade():
     system = platform.system().lower()
     if "windows" in system:
-        run(["winget", "upgrade", "Microsoft.dotnet"])
+        run(["winget", "upgrade", "Microsoft.dotnet"], fail=True)
     elif "darwin" in system:
         run(["brew", "upgrade", "dotnet"])
     elif "linux" in system:

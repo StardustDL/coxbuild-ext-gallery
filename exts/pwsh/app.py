@@ -1,6 +1,7 @@
 import platform
+
 from coxbuild.extensions.shell import existCommand
-from coxbuild.schema import task, precond, postcond, run, group, named, depend
+from coxbuild.schema import depend, group, named, postcond, precond, run, task
 
 grouped = group("pwsh")
 
@@ -28,7 +29,7 @@ def install():
 def upgrade():
     system = platform.system().lower()
     if "windows" in system:
-        run(["winget", "upgrade", "Microsoft.PowerShell"])
+        run(["winget", "upgrade", "Microsoft.PowerShell"], fail=True)
     elif "darwin" in system:
         run(["brew", "upgrade", "pwsh"])
     elif "linux" in system:

@@ -1,14 +1,13 @@
-from coxbuild.schema import task, precond, postcond, run, group, named, depend
+from coxbuild.extensions.shell import existCommand
+import platform
+from coxbuild.schema import depend, group, named, postcond, precond, run, task
 
 grouped = group("pandoc")
-
-from coxbuild.extensions.shell import existCommand
-
-import platform
 
 
 def installed():
     return bool(run(["pandoc", "--version"], fail=True, pipe=True))
+
 
 @grouped
 @precond(lambda: not installed())
@@ -23,16 +22,18 @@ def install():
     elif "linux" in system:
         run(["apt-get", "install", "pandoc"])
 
+
 @grouped
 @task
 def upgrade():
     system = platform.system().lower()
     if "windows" in system:
-        run(["winget", "upgrade", "JohnMacFarlane.Pandoc"])
+        run(["winget", "upgrade", "JohnMacFarlane.Pandoc"], fail=True)
     elif "darwin" in system:
         run(["brew", "upgrade", "pandoc"])
     elif "linux" in system:
         run(["apt-get", "upgrade", "pandoc"])
+
 
 @named("install")
 @depend(install)
@@ -44,4 +45,3 @@ def defaultInstall(): pass
 @depend(upgrade)
 @task
 def defaultUpgrade(): pass
-

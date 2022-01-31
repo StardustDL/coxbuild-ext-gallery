@@ -1,14 +1,13 @@
-from coxbuild.schema import task, precond, postcond, run, group, depend, named
+from coxbuild.extensions.shell import existCommand
+import platform
+from coxbuild.schema import depend, group, named, postcond, precond, run, task
 
 grouped = group("vim")
-
-from coxbuild.extensions.shell import existCommand
-
-import platform
 
 
 def installed():
     return bool(run(["vim", "--version"], fail=True, pipe=True))
+
 
 @grouped
 @precond(lambda: not installed())
@@ -23,16 +22,18 @@ def install():
     elif "linux" in system:
         run(["apt-get", "install", "vim"])
 
+
 @grouped
 @task
 def upgrade():
     system = platform.system().lower()
     if "windows" in system:
-        run(["winget", "upgrade", "vim.vim"])
+        run(["winget", "upgrade", "vim.vim"], fail=True)
     elif "darwin" in system:
         run(["brew", "upgrade", "vim"])
     elif "linux" in system:
         run(["apt-get", "upgrade", "vim"])
+
 
 @named("install")
 @depend(install)

@@ -1,12 +1,11 @@
+from coxbuild.extensions.shell import existCommand
+from urllib import request
+import platform
 from pathlib import Path
-from coxbuild.schema import task, precond, postcond, run, group, depend, named
+
+from coxbuild.schema import depend, group, named, postcond, precond, run, task
 
 grouped = group("rust")
-
-from coxbuild.extensions.shell import existCommand
-
-import platform
-from urllib import request
 
 
 def installed():
@@ -34,6 +33,7 @@ def install():
 @task
 def upgrade():
     run(["rustup", "update", "stable"])
+
 
 @named("install")
 @depend(install)

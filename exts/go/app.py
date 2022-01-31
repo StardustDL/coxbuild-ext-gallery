@@ -1,14 +1,13 @@
-from coxbuild.schema import task, precond, postcond, run, group, named, depend
+from coxbuild.extensions.shell import existCommand
+import platform
+from coxbuild.schema import depend, group, named, postcond, precond, run, task
 
 grouped = group("go")
-
-from coxbuild.extensions.shell import existCommand
-
-import platform
 
 
 def installed():
     return bool(run(["go", "version"], fail=True, pipe=True))
+
 
 @grouped
 @precond(lambda: not installed())
@@ -23,16 +22,18 @@ def install():
     elif "linux" in system:
         run(["apt-get", "install", "go"])
 
+
 @grouped
 @task
 def upgrade():
     system = platform.system().lower()
     if "windows" in system:
-        run(["winget", "upgrade", "GoLang.Go"])
+        run(["winget", "upgrade", "GoLang.Go"], fail=True)
     elif "darwin" in system:
         run(["brew", "upgrade", "go"])
     elif "linux" in system:
         run(["apt-get", "upgrade", "go"])
+
 
 @named("install")
 @depend(install)
