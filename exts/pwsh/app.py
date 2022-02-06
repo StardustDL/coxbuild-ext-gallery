@@ -3,14 +3,11 @@ import platform
 from coxbuild.extensions.shell import existCommand
 from coxbuild.schema import depend, group, named, postcond, precond, run, task
 
-grouped = group("pwsh")
-
 
 def installed():
     return bool(run(["pwsh", "--version"], fail=True, pipe=True))
 
 
-@grouped
 @precond(lambda: not installed())
 @postcond(lambda: installed())
 @task
@@ -24,7 +21,6 @@ def install():
         run(["apt-get", "install", "pwsh"])
 
 
-@grouped
 @task
 def upgrade():
     system = platform.system().lower()
@@ -34,15 +30,3 @@ def upgrade():
         run(["brew", "upgrade", "pwsh"])
     elif "linux" in system:
         run(["apt-get", "upgrade", "pwsh"])
-
-
-@named("install")
-@depend(install)
-@task
-def defaultInstall(): pass
-
-
-@named("upgrade")
-@depend(upgrade)
-@task
-def defaultUpgrade(): pass
